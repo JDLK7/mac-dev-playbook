@@ -6,6 +6,10 @@ xcode-select --install
 # Install homebrew (not unatended)
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
+# Brew env
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $HOME/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 # Install ansible
 brew install ansible
 

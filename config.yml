@@ -1,6 +1,4 @@
 ---
-configure_terminal: false
-
 # Dotfiles
 dotfiles_repo: "https://github.com/JDLK7/dotfiles-2.git"
 dotfiles_repo_version: main
@@ -10,12 +8,18 @@ dotfiles_files:
   - .curl-format
   - .osx
   - .p10k.zsh
+  - .spaceship.zsh
   - .vimrc
   - .zshrc
 
 sudoers_custom_config: |
   # Allow users in admin group to use sudo with no password.
   %admin ALL=(ALL) NOPASSWD: ALL
+
+homebrew_taps:
+  - homebrew/core
+  - homebrew/cask
+  - homebrew/cask-fonts
 
 homebrew_installed_packages:
   # - ansible # Installed via Pip.
@@ -36,7 +40,6 @@ homebrew_installed_packages:
   - jq
   - libevent
   - mcrypt
-  - mrroboto
   - nmap
   - node
   - nvm
@@ -44,6 +47,7 @@ homebrew_installed_packages:
   - php
   - pv
   - readline
+  - spaceship
   - sqlite
   - ssh-copy-id
   - tmux
@@ -51,18 +55,23 @@ homebrew_installed_packages:
   - watch
   - wget
   - wrk
+  - zsh
+#  - mrroboto
 
 homebrew_cask_apps:
   - 1password
+  - alfred
   - docker
+  - firefox
+  - font-fira-code
+  - font-fontawesome
+  - font-hack-nerd-font
+  - google-chrome
+  - handbrake
   - iterm2
+  - ngrok
+  - nordvpn
+  - postman
+  - rambox
   - spotify
   - visual-studio-code
-  - alfred
-  - firefox
-  - google-chrome
-  - postman
-  - font-fira-code
-  - ngrok
-  - rambox
-  - handbrake
