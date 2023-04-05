@@ -85,3 +85,17 @@ masmovil_repos:
   - infrastructure
   - kubernetes-clusters
   - mm-monorepo
+
+masmovil_clusters:
+  - name: mm-k8s-prod-01
+    region: europe-west1
+    project: mm-k8s-prod-01
+  - name: mm-k8s-dev-01
+    region: europe-west1
+    project: mm-k8s-dev-01
+  - name: mm-k8s-dev-02
+    region: europe-west2
+    project: mm-k8s-dev-02
+  - name: mm-k8s-qa-01
+    region: europe-west1
+    project: mm-k8s-qa

@@ -11,3 +11,13 @@
     repo: "git@github.com:masmovil/{{ item }}.git"
     dest: "~/workspace/masmovil/{{ item }}"
   loop: "{{ masmovil_repos }}"
+
+- name: GCloud SDK login
+  command: gcloud auth login
+
+- name: GCloud login for other applications
+  command: gcloud auth application-default login
+
+- name: GCP clusters credentials
+  command: "gcloud container clusters get-credentials {{ item.name }} --region {{ item.region }} --project {{ item.project }}"
+  loop: "{{ masmovil_clusters }}"

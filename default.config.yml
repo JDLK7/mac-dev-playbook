@@ -132,3 +132,6 @@ post_provision_tasks: []
 
 # Masmovil repos to clone
 masmovil_repos: []
+
+# Masmovil GCP Kubernetes clusters
+masmovil_clusters: []
