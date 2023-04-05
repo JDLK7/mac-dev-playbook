@@ -25,6 +25,7 @@ homebrew_installed_packages:
   # - ansible # Installed via Pip.
   - autoconf
   - bash-completion
+  - bazelisk
   - cowsay
   - delve
   - doxygen
@@ -43,6 +44,7 @@ homebrew_installed_packages:
   - nmap
   - node
   - nvm
+  - openjdk@11
   - openssl
   - php
   - pv
@@ -56,7 +58,6 @@ homebrew_installed_packages:
   - wget
   - wrk
   - zsh
-#  - mrroboto
 
 homebrew_cask_apps:
   - 1password
@@ -68,6 +69,7 @@ homebrew_cask_apps:
   - font-hack-nerd-font
   - google-chrome
   - handbrake
+  - intellij-idea-ce
   - iterm2
   - ngrok
   - nordvpn
@@ -75,3 +77,8 @@ homebrew_cask_apps:
   - rambox
   - spotify
   - visual-studio-code
+
+masmovil_repos:
+  - mm-monorepo
+  - kubernetes-clusters
+  - infrastructure
