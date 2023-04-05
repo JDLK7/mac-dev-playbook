@@ -22,7 +22,7 @@
   when: user is undefined
 
 - name: Set Z shell as default shell
-  become: yes
+  become: true
   user:
     name: "{{ user.stdout }}"
     shell: /bin/zsh
