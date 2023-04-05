@@ -8,16 +8,17 @@ This playbook installs and configures most of the software I use on my Mac for w
 
 ## Installation
 
-  1. Ensure Apple's command line tools are installed (`xcode-select --install` to launch the installer).
-  2. [Install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/index.html):
+  1. Decrypt the configuration file: `openssl enc -aes-256-cbc -d -A -in config.yml.enc -out config.yml -p`
+  2. Ensure Apple's command line tools are installed (`xcode-select --install` to launch the installer).
+  3. [Install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/index.html):
 
      1. Run the following command to add Python 3 to your $PATH: `export PATH="$HOME/Library/Python/3.8/bin:/opt/homebrew/bin:$PATH"`
      2. Upgrade Pip: `sudo pip3 install --upgrade pip`
      3. Install Ansible: `pip3 install ansible`
 
-  3. Clone or download this repository to your local drive.
-  4. Run `ansible-galaxy install -r requirements.yml` inside this directory to install required Ansible roles.
-  5. Run `ansible-playbook main.yml --ask-become-pass` inside this directory. Enter your macOS account password when prompted for the 'BECOME' password.
+  4. Clone or download this repository to your local drive.
+  5. Run `ansible-galaxy install -r requirements.yml` inside this directory to install required Ansible roles.
+  6. Run `ansible-playbook main.yml --ask-become-pass` inside this directory. Enter your macOS account password when prompted for the 'BECOME' password.
 
 > Note: If some Homebrew commands fail, you might need to agree to Xcode's license or fix some other Brew issue. Run `brew doctor` to see if this is the case.
 
@@ -90,6 +91,11 @@ dockitems_persist:
 ```
 
 Any variable can be overridden in `config.yml`; see the supporting roles' documentation for a complete list of available variables.
+
+After updating `config.yml` make sure to encrypt encrypt the file and push it to the repo: 
+```sh
+openssl enc -aes-256-cbc -p -in config.yml -out config.yml.enc
+```
 
 ## Included Applications / Configuration (Default)
 
