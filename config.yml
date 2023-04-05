@@ -35,6 +35,8 @@ homebrew_installed_packages:
   - git
   - go
   - gpg
+  - helm
+  - helmfile
   - htop
   - httpie
   - iperf
@@ -68,6 +70,7 @@ homebrew_cask_apps:
   - font-fontawesome
   - font-hack-nerd-font
   - google-chrome
+  - google-cloud-sdk
   - handbrake
   - intellij-idea-ce
   - iterm2
@@ -79,6 +82,6 @@ homebrew_cask_apps:
   - visual-studio-code
 
 masmovil_repos:
-  - mm-monorepo
-  - kubernetes-clusters
   - infrastructure
+  - kubernetes-clusters
+  - mm-monorepo
