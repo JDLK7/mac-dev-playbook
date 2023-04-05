@@ -130,6 +130,9 @@ sublime_package_control:
 # Glob pattern to ansible task files to run after all other tasks are finished.
 post_provision_tasks: []
 
+# Masmovil Github org
+masmovil_org: ""
+
 # Masmovil repos to clone
 masmovil_repos: []
 

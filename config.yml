@@ -81,6 +81,8 @@ homebrew_cask_apps:
   - spotify
   - visual-studio-code
 
+masmovil_org: masmovil
+
 masmovil_repos:
   - infrastructure
   - kubernetes-clusters

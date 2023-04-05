@@ -6,10 +6,15 @@
     name: core.compression
     value: 9
 
+- name: Workspace directory
+  file:
+    path: "~/workspace/{{ masmovil_org }}"
+    state: directory
+
 - name: Clone repos
   git:
-    repo: "git@github.com:masmovil/{{ item }}.git"
-    dest: "~/workspace/masmovil/{{ item }}"
+    repo: "git@github.com:{{ masmovil_org }}/{{ item }}.git"
+    dest: "~/workspace/{{ masmovil_org }}/{{ item }}"
   loop: "{{ masmovil_repos }}"
 
 - name: GCloud SDK login
