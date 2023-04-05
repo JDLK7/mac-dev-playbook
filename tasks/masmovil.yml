@@ -1,0 +1,13 @@
+---
+# This configuration is needed to clone the monorepo
+- name: Update git config
+  git_config:
+    scope: global
+    name: core.compression
+    value: 9
+
+- name: Clone repos
+  git:
+    repo: "git@github.com:masmovil/{{ item }}.git"
+    dest: "~/workspace/masmovil/{{ item }}"
+  loop: "{{ masmovil_repos }}"
