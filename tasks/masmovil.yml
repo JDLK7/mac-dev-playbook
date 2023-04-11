@@ -17,6 +17,13 @@
     dest: "~/workspace/{{ masmovil_org }}/{{ item }}"
   loop: "{{ masmovil_repos }}"
 
+- name: Link OpenJDK
+  become: true
+  file:
+    src: /usr/local/opt/openjdk@11/libexec/openjdk.jdk
+    dest: /Library/Java/JavaVirtualMachines/openjdk-11.jdk
+    state: link
+
 - name: Check if ~/.zshrc exists
   stat:
     path: ~/.zshrc
@@ -35,6 +42,9 @@
     dest: ~/.zshrc
     marker: "#### {mark} ANSIBLE MANAGED BLOCK ####"
     content: |
+      # Java 11
+      export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+
       # Helm
       export HELM_HOME=$HOME/.helm
 
@@ -50,6 +60,9 @@
     dest: ~/.bashrc
     marker: "#### {mark} ANSIBLE MANAGED BLOCK ####"
     content: |
+      # Java 11
+      export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+
       # Helm
       export HELM_HOME=$HOME/.helm
 
