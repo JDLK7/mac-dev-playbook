@@ -17,6 +17,48 @@
     dest: "~/workspace/{{ masmovil_org }}/{{ item }}"
   loop: "{{ masmovil_repos }}"
 
+- name: Check if ~/.zshrc exists
+  stat:
+    path: ~/.zshrc
+  register: zshrc_stat_result
+
+- name: Check if ~/.bashrc exists
+  stat:
+    path: ~/.bashrc
+  register: bashrc_stat_result
+
+- name: Add configuration to .zshrc
+  when: zshrc_stat_result.stat.exists
+  blockinfile:
+    state: present
+    insertafter: EOF
+    dest: ~/.zshrc
+    marker: "#### {mark} ANSIBLE MANAGED BLOCK ####"
+    content: |
+      # Helm
+      export HELM_HOME=$HOME/.helm
+
+      # GCloud SDK
+      source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+      source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+
+- name: Add configuration to .bashrc
+  when: bashrc_stat_result.stat.exists
+  blockinfile:
+    state: present
+    insertafter: EOF
+    dest: ~/.bashrc
+    marker: "#### {mark} ANSIBLE MANAGED BLOCK ####"
+    content: |
+      # Helm
+      export HELM_HOME=$HOME/.helm
+
+      # GCloud SDK
+      source "$(brew --prefix)/share/google-cloud-sdk/path.bash.inc"
+
+- name: Install GCloud components
+  command: "gcloud components install kubectl -q"
+
 - name: GCloud SDK login
   command: gcloud auth login
 
@@ -26,3 +68,24 @@
 - name: GCP clusters credentials
   command: "gcloud container clusters get-credentials {{ item.name }} --region {{ item.region }} --project {{ item.project }}"
   loop: "{{ masmovil_clusters }}"
+
+- debug:
+    msg: You may need to source ~/.bashrc or ~/.zshrc for some commands to work.
+
+# TODO: "helm repo add ..." throws this error -> Error: looks like "<repo_url>" is not a valid chart repository or cannot be reached: failed to fetch <repo_url>/index.yaml : 404 Not Found
+
+# - name: Helm plugins directory
+#   file:
+#     path: "~/.helm/plugins"
+#     state: directory
+
+# - name: Install Helm plugins
+#   command: "helm plugin install https://github.com/futuresimple/helm-secrets"
+
+# - pause:
+#     prompt: "Make sure you are connected to the VPN. Type 'y' to continue when you are ready"
+#   register: is_connected_to_vpn
+
+# - name: Helm repository
+#   when: is_connected_to_vpn.user_input == 'y'
+#   command: "helm repo add {{ masmovil_org }} {{ masmovil_chart_repo }}"
