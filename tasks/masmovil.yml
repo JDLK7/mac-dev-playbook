@@ -78,7 +78,11 @@
 - name: GCloud login for other applications
   command: gcloud auth application-default login
 
+- name: GCloud token
+  command:  gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken  --password-stdin europe-docker.pkg.dev
+
 - name: GCP clusters credentials
+  tags: ["gcp_credentials"]
   command: "gcloud container clusters get-credentials {{ item.name }} --region {{ item.region }} --project {{ item.project }}"
   loop: "{{ masmovil_clusters }}"
 
