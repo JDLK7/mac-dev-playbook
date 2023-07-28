@@ -1,4 +1,9 @@
 ---
+- name: Install apt packages
+  apt:
+    update_cache: yes
+    pkg: "{{ apt_packages }}"
+
 - name: Install snap packages
   snap:
     classic: true
@@ -8,8 +13,3 @@
   snap:
     classic: true
     name: "{{ snap_packages.classic }}"
-
-# - name: Install apt packages
-#   apt:
-#     update_cache: yes
-#     pkg: "{{ apt_packages }}"
