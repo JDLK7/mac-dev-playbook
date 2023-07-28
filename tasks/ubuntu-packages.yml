@@ -1,15 +1,14 @@
 ---
 - name: Install apt packages
-  apt:
+  ansible.builtin.apt:
     update_cache: yes
     pkg: "{{ apt_packages }}"
 
 - name: Install snap packages
-  snap:
-    classic: true
-    name: "{{ snap_packages.regular }}"
+  community.general.snap:
+    name: ["{{ snap_packages.regular }}"]
 
 - name: Install snap classic packages
-  snap:
+  community.general.snap:
     classic: true
     name: "{{ snap_packages.classic }}"
