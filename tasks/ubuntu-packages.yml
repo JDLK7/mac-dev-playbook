@@ -5,10 +5,16 @@
     pkg: "{{ apt_packages }}"
 
 - name: Install snap packages
+  tags: ['snap']
   community.general.snap:
-    name: ["{{ snap_packages.regular }}"]
+    name: "{{ item }}"
+    channel: "latest/stable"
+  with_items: "{{ snap_packages.regular }}"
 
 - name: Install snap classic packages
+  tags: ['snap']
   community.general.snap:
+    name: "{{ item }}"
     classic: true
-    name: "{{ snap_packages.classic }}"
+    channel: "latest/stable"
+  with_items: "{{ snap_packages.classic }}"

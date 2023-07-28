@@ -73,16 +73,19 @@
   command: "gcloud components install kubectl -q"
 
 - name: GCloud SDK login
+  tags: ["gcp_credentials"]
   command: gcloud auth login
 
 - name: GCloud login for other applications
+  tags: ["gcp_credentials"]
   command: gcloud auth application-default login
 
 - name: GCloud token
+  tags: ["gcp_credentials"]
   command:  gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken  --password-stdin europe-docker.pkg.dev
 
 - name: GCP clusters credentials
-  tags: ["gcp_credentials"]
+  tags: ["gcp_credentials", "k8s_credentials"]
   command: "gcloud container clusters get-credentials {{ item.name }} --region {{ item.region }} --project {{ item.project }}"
   loop: "{{ masmovil_clusters }}"
 
