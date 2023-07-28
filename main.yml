@@ -38,6 +38,9 @@
       when: configure_osx
       tags: ['osx']
 
+    - import_tasks: tasks/ubuntu-packages.yml
+      tags: ['linux']
+
     - import_tasks: tasks/extra-packages.yml
       tags: ['extra-packages']
 

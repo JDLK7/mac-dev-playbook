@@ -1,0 +1,58 @@
+---
+# Disabled features
+configure_dotfiles: true
+configure_terminal: false
+configure_osx: false
+
+sudoers_custom_config: |
+  # Allow users in admin group to use sudo with no password.
+  %admin ALL=(ALL) NOPASSWD: ALL
+
+apt_packages: []
+
+snap_packages:
+  regular:
+    - 1password
+    - thunderbird
+    - mattermost-desktop
+    - postman
+    - spotify
+  classic:
+    - go
+    - code
+    - intellij-idea-community
+    - goland
+    - obsidian
+    # - kubectl
+
+masmovil_org: masmovil
+
+masmovil_repos:
+  - infrastructure
+  - kubernetes-clusters
+  - mm-monorepo
+
+masmovil_clusters:
+  - name: mm-k8s-prod-01
+    region: europe-west1
+    project: mm-k8s-prod-01
+  - name: mm-k8s-dev-01
+    region: europe-west1
+    project: mm-k8s-dev-01
+  - name: mm-k8s-dev-02
+    region: europe-west2
+    project: mm-k8s-dev-02
+  - name: mm-k8s-qa-01
+    region: europe-west1
+    project: mm-k8s-qa
+  - name: mm-k8s-dev-eusw1-01
+    region: europe-southwest1
+    project: mm-k8s-dev-01
+  - name: mm-k8s-sta-eusw1-01
+    region: europe-southwest1
+    project: mm-k8s-dev-01
+  - name: mm-k8s-prod-eusw1-01
+    region: europe-southwest1
+    project: mm-k8s-prod-01
+
+masmovil_chart_repo: https://charts.private.prod-01.k8s.masmovil.com
