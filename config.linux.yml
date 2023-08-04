@@ -18,6 +18,7 @@ dotfiles_files:
 apt_packages:
   - vim
   - snapd
+  - zsh
 
 snap_packages:
   regular:

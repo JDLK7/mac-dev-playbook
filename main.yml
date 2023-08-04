@@ -23,6 +23,7 @@
       tags: ['terminal']
 
     - import_tasks: tasks/ubuntu-packages.yml
+      become: true
       tags: ['linux']
 
     - import_tasks: tasks/extra-packages.yml
