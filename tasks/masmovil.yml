@@ -1,10 +1,39 @@
 ---
+- name: "Configure global email"
+  git_config:
+    scope: global
+    name: user.email
+    value: "{{ git.email }}"
+
+- name: "Configure global name"
+  git_config:
+    scope: global
+    name: user.name
+    value: "{{ git.name }}"
+
+- name: "Configure global editor"
+  git_config:
+    scope: global
+    name: core.editor
+    value: vim
+
 # This configuration is needed to clone the monorepo
-- name: Update git config
+- name: Update git config to improve monorepo performance
   git_config:
     scope: global
     name: core.compression
     value: 9
+
+- name: Copy global .gitignore
+  ansible.builtin.copy:
+    src: templates/.gitignore_global
+    dest: ~/.gitignore_global
+
+- name: Update git config for globally ignored files
+  git_config:
+    scope: global
+    name: core.excludesfile
+    value: ~/.gitignore_global
 
 - name: Workspace directory
   file:
@@ -12,15 +41,39 @@
     state: directory
 
 - name: Clone repos
+  loop: "{{ masmovil_repos }}"
   git:
     repo: "git@github.com:{{ masmovil_org }}/{{ item }}.git"
     dest: "~/workspace/{{ masmovil_org }}/{{ item }}"
+
+- name: "Configure email for {{ item }}"
   loop: "{{ masmovil_repos }}"
+  git_config:
+    scope: local
+    repo: "~/workspace/{{ masmovil_org }}/{{ item }}"
+    name: user.email
+    value: "{{ masmovil_git.email }}"
+
+- name: "Configure name for {{ item }}"
+  loop: "{{ masmovil_repos }}"
+  git_config:
+    scope: local
+    repo: "~/workspace/{{ masmovil_org }}/{{ item }}"
+    name: user.name
+    value: "{{ masmovil_git.name }}"
+
+- name: "Additional git config for {{ item.repo }}"
+  loop: "{{ masmovil_git.additional_config }}"
+  git_config:
+    scope: local
+    repo: "~/workspace/{{ masmovil_org }}/{{ item.repo }}"
+    name: "{{ item.key }}"
+    value: "{{ item.value }}"
 
 - name: Link OpenJDK
   become: true
   file:
-    src: /usr/local/opt/openjdk@11/libexec/openjdk.jdk
+    src: /opt/homebrew/opt/openjdk@11/libexec/openjdk.jdk
     dest: /Library/Java/JavaVirtualMachines/openjdk-11.jdk
     state: link
 
@@ -43,14 +96,19 @@
     marker: "#### {mark} ANSIBLE MANAGED BLOCK ####"
     content: |
       # Java 11
-      export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+      export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
+      export CPPFLAGS="-I/opt/homebrew/opt/openjdk@11/include"
 
       # Helm
       export HELM_HOME=$HOME/.helm
+      export HELM_REGISTRY_CONFIG="~/.docker/config.json"
 
       # GCloud SDK
       source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
       source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+
+      # Docker
+      export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
 
 - name: Add configuration to .bashrc
   when: bashrc_stat_result.stat.exists
@@ -61,48 +119,51 @@
     marker: "#### {mark} ANSIBLE MANAGED BLOCK ####"
     content: |
       # Java 11
-      export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+      export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"
+      export CPPFLAGS="-I/opt/homebrew/opt/openjdk@11/include"
 
       # Helm
       export HELM_HOME=$HOME/.helm
+      export HELM_REGISTRY_CONFIG="~/.docker/config.json"
 
       # GCloud SDK
       source "$(brew --prefix)/share/google-cloud-sdk/path.bash.inc"
 
+      # Docker
+      export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+
+- name: Docker configuration
+  ansible.builtin.copy:
+    src: templates/docker-config.json
+    dest: ~/.docker/config.json
+
+- name: Testcontainers configuration
+  ansible.builtin.copy:
+    src: templates/.testcontainers.properties
+    dest: ~/.testcontainers.properties
+
 - name: Install GCloud components
   command: "gcloud components install kubectl -q"
-
 - name: GCloud SDK login
+  tags: ["gcp_credentials"]
   command: gcloud auth login
 
 - name: GCloud login for other applications
+  tags: ["gcp_credentials"]
   command: gcloud auth application-default login
 
-- name: GCloud token
-  command:  gcloud auth application-default print-access-token | helm registry login -u oauth2accesstoken  --password-stdin europe-docker.pkg.dev
+- name: GCloud configure docker europe registry
+  tags: ["gcp_credentials"]
+  command: gcloud auth configure-docker europe-docker.pkg.dev
+
+- name: GCloud configure other registries
+  tags: ["gcp_credentials"]
+  command: gcloud auth configure-docker
 
 - name: GCP clusters credentials
-  tags: ["gcp_credentials"]
+  tags: ["gcp_credentials", "k8s_credentials"]
   command: "gcloud container clusters get-credentials {{ item.name }} --region {{ item.region }} --project {{ item.project }}"
   loop: "{{ masmovil_clusters }}"
 
 - debug:
     msg: You may need to source ~/.bashrc or ~/.zshrc for some commands to work.
-
-# TODO: "helm repo add ..." throws this error -> Error: looks like "<repo_url>" is not a valid chart repository or cannot be reached: failed to fetch <repo_url>/index.yaml : 404 Not Found
-
-# - name: Helm plugins directory
-#   file:
-#     path: "~/.helm/plugins"
-#     state: directory
-
-# - name: Install Helm plugins
-#   command: "helm plugin install https://github.com/futuresimple/helm-secrets"
-
-# - pause:
-#     prompt: "Make sure you are connected to the VPN. Type 'y' to continue when you are ready"
-#   register: is_connected_to_vpn
-
-# - name: Helm repository
-#   when: is_connected_to_vpn.user_input == 'y'
-#   command: "helm repo add {{ masmovil_org }} {{ masmovil_chart_repo }}"

@@ -38,3 +38,9 @@
     src: ~/.oh-my-zsh/custom/themes/spaceship-prompt/spaceship.zsh-theme
     dest: ~/.oh-my-zsh/custom/themes/spaceship.zsh-theme
     state: link
+
+# The profile needs to be imported on iTerm
+- name: Copy iTerm profile
+  ansible.builtin.copy:
+    src: templates/iterm-profile.json
+    dest: "{{ personal_workspace }}/iterm-profile.json"
